@@ -11,12 +11,23 @@ public class Quiz extends JFrame {
     private ButtonGroup buttonGroup;
     private JTextArea feedbackArea;
 
-    private String[] questions = {"What is the capital of France?", "What is the largest mammal?", "Who painted the Mona Lisa?"};
-    private String[][] options = {{"Paris", "Rome", "Berlin"}, {"Elephant", "Blue whale", "Giraffe"}, {"Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh"}};
-    private int[] answers = {0, 1, 0};
+    private String[] questions = {"What is the capital of France?", "What is the largest mammal?", "Who painted the Mona Lisa?",
+                                  "What does CPU stand for?","Which programming language is used for Android app development?",
+                                  "What does HTML stand for?","What is the purpose of a firewall in computer networks?",
+                                  "Which technology is used for wireless communication between devices?",
+                                "What is the purpose of an SSD (Solid State Drive)?","What does VPN stand for?"
+                            };
+    private String[][] options = {{"Paris", "Rome", "Berlin"}, {"Elephant", "Blue whale", "Giraffe"}, {"Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh"},
+                                    {" Central Processing Unit",  "Computer Processing Unit"," Central Power Unit"},{"java","python","c++"},
+                                 {" Hyper Text Markup Language","Home Tool Markup Language","Hyperlinks and Text Markup Language"},
+                                {"To prevent unauthorized access","To speed up internet connection","To encrypt data transmissions"},
+                                 {"Bluetooth"," Ethernet","USB"},{"Store and retrieve data"," Display images and videos"," Provide internet access"},
+                                 {" Virtual Private Network"," Very Personal Network","Virtual Public Network"}};
+                                                                              
+    private int[] answers = {0, 1, 0,0,0,0,0,0,0,0};
     private int currentQuestion = 0;
     private int score = 0;
-    private int totalQuestions = 3; // Total number of questions
+    private int totalQuestions = 10; 
     private boolean quizCompleted = false;
 
     public Quiz() {
@@ -37,10 +48,11 @@ public class Quiz extends JFrame {
         for (int i = 0; i < 3; i++) {
             optionButtons[i] = new JRadioButton();
             optionButtons[i].setForeground(Color.WHITE);
+            optionButtons[i].setBackground(Color.BLACK); 
             optionsPanel.add(optionButtons[i]);
             buttonGroup.add(optionButtons[i]);
         }
-        optionsPanel.setBackground(Color.BLACK);
+        optionsPanel.setBackground(Color.BLACK); 
         add(optionsPanel, BorderLayout.CENTER);
 
         submitButton = new JButton("Submit");
@@ -77,7 +89,7 @@ public class Quiz extends JFrame {
 
     private void checkAnswer() {
         if (!quizCompleted) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 10; i++) {
                 if (optionButtons[i].isSelected()) {
                     if (i == answers[currentQuestion]) {
                         feedbackArea.append("Question " + (currentQuestion + 1) + ": Correct!\n");
