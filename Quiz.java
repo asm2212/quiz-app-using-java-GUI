@@ -30,14 +30,14 @@ public class Quiz extends JFrame {
     private int totalQuestions = 10;
     private boolean quizCompleted = false;
     private Timer timer;
-    private int secondsLeft = 10 * 60;
+    private int secondsLeft = 5 * 60;
 
     public Quiz() {
         setTitle("Quiz App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.BLACK);
+        getContentPane().setBackground(Color.ORANGE);
 
         questionLabel = new JLabel();
         questionLabel.setForeground(Color.WHITE);
@@ -50,11 +50,11 @@ public class Quiz extends JFrame {
         for (int i = 0; i < 3; i++) {
             optionButtons[i] = new JRadioButton();
             optionButtons[i].setForeground(Color.WHITE);
-            optionButtons[i].setBackground(Color.BLACK);
+            optionButtons[i].setBackground(Color.ORANGE);
             optionsPanel.add(optionButtons[i]);
             buttonGroup.add(optionButtons[i]);
         }
-        optionsPanel.setBackground(Color.BLACK);
+        optionsPanel.setBackground(Color.ORANGE);
         add(optionsPanel, BorderLayout.CENTER);
 
         submitButton = new JButton("Submit");
@@ -65,12 +65,12 @@ public class Quiz extends JFrame {
             }
         });
         submitButton.setForeground(Color.WHITE);
-        submitButton.setBackground(Color.BLACK);
+        submitButton.setBackground(Color.ORANGE);
         add(submitButton, BorderLayout.SOUTH);
 
         feedbackArea = new JTextArea();
         feedbackArea.setForeground(Color.WHITE);
-        feedbackArea.setBackground(Color.BLACK);
+        feedbackArea.setBackground(Color.ORANGE);
         add(new JScrollPane(feedbackArea), BorderLayout.EAST);
 
         timerLabel = new JLabel();
@@ -116,6 +116,7 @@ public class Quiz extends JFrame {
         } else {
             if (!quizCompleted) {
                 quizCompleted = true;
+                timer.stop();
                 JOptionPane.showMessageDialog(this, "Quiz completed!\nYour score: " + score + "/" + totalQuestions);
             }
             submitButton.setEnabled(false);
@@ -124,6 +125,8 @@ public class Quiz extends JFrame {
 
     private void checkAnswer() {
         if (!quizCompleted) {
+            timer.stop(); // Stop the timer
+    
             for (int i = 0; i < 3; i++) {
                 if (optionButtons[i].isSelected()) {
                     if (i == answers[currentQuestion]) {
@@ -135,20 +138,33 @@ public class Quiz extends JFrame {
                     break;
                 }
             }
-
+    
             currentQuestion++;
-            displayQuestion();
+    
+            if (currentQuestion < totalQuestions) {
+                // Reset timer and start again
+                secondsLeft = 5 * 60;
+                startTimer();
+                displayQuestion();
+            } else {
+                // Quiz completed
+                quizCompleted = true;
+                timer.stop();
+                JOptionPane.showMessageDialog(this, "Quiz completed!\nYour score: " + score + "/" + totalQuestions);
+                submitButton.setEnabled(false);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Quiz has been completed. You cannot submit more answers.");
         }
     }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 Quiz quiz = new Quiz();
-                quiz.getContentPane().setBackground(Color.BLACK);
+                quiz.getContentPane().setBackground(Color.ORANGE);
                 quiz.setVisible(true);
             }
         });
