@@ -11,20 +11,23 @@ public class Quiz extends JFrame {
     private ButtonGroup buttonGroup;
     private JTextArea feedbackArea;
 
-    // Quiz data
     private String[] questions = {"What is the capital of France?", "What is the largest mammal?", "Who painted the Mona Lisa?"};
     private String[][] options = {{"Paris", "Rome", "Berlin"}, {"Elephant", "Blue whale", "Giraffe"}, {"Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh"}};
-    private int[] answers = {0, 1, 0}; // Index of correct option for each question
+    private int[] answers = {0, 1, 0};
     private int currentQuestion = 0;
     private int score = 0;
+    private int totalQuestions = 3; // Total number of questions
+    private boolean quizCompleted = false;
 
     public Quiz() {
         setTitle("Quiz App");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(600, 400);
         setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.BLACK);
 
         questionLabel = new JLabel();
+        questionLabel.setForeground(Color.WHITE);
         add(questionLabel, BorderLayout.NORTH);
 
         JPanel optionsPanel = new JPanel();
@@ -33,9 +36,11 @@ public class Quiz extends JFrame {
         buttonGroup = new ButtonGroup();
         for (int i = 0; i < 3; i++) {
             optionButtons[i] = new JRadioButton();
+            optionButtons[i].setForeground(Color.WHITE);
             optionsPanel.add(optionButtons[i]);
             buttonGroup.add(optionButtons[i]);
         }
+        optionsPanel.setBackground(Color.BLACK);
         add(optionsPanel, BorderLayout.CENTER);
 
         submitButton = new JButton("Submit");
@@ -45,40 +50,49 @@ public class Quiz extends JFrame {
                 checkAnswer();
             }
         });
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setBackground(Color.BLACK);
         add(submitButton, BorderLayout.SOUTH);
 
         feedbackArea = new JTextArea();
+        feedbackArea.setForeground(Color.WHITE);
+        feedbackArea.setBackground(Color.BLACK);
         add(new JScrollPane(feedbackArea), BorderLayout.EAST);
 
         displayQuestion();
     }
 
     private void displayQuestion() {
-        questionLabel.setText(questions[currentQuestion]);
-        for (int i = 0; i < 3; i++) {
-            optionButtons[i].setText(options[currentQuestion][i]);
+        if (currentQuestion < totalQuestions) {
+            questionLabel.setText(questions[currentQuestion]);
+            for (int i = 0; i < 3; i++) {
+                optionButtons[i].setText(options[currentQuestion][i]);
+                optionButtons[i].setSelected(false);
+            }
+        } else {
+            quizCompleted = true;
+            JOptionPane.showMessageDialog(this, "Quiz completed!\nYour score: " + score + "/" + totalQuestions);
         }
     }
 
     private void checkAnswer() {
-        for (int i = 0; i < 3; i++) {
-            if (optionButtons[i].isSelected()) {
-                if (i == answers[currentQuestion]) {
-                    feedbackArea.append("Question " + (currentQuestion + 1) + ": Correct!\n");
-                    score++;
-                } else {
-                    feedbackArea.append("Question " + (currentQuestion + 1) + ": Incorrect!\n");
+        if (!quizCompleted) {
+            for (int i = 0; i < 3; i++) {
+                if (optionButtons[i].isSelected()) {
+                    if (i == answers[currentQuestion]) {
+                        feedbackArea.append("Question " + (currentQuestion + 1) + ": Correct!\n");
+                        score++;
+                    } else {
+                        feedbackArea.append("Question " + (currentQuestion + 1) + ": Incorrect!\n");
+                    }
+                    break;
                 }
-                break;
             }
-        }
 
-        currentQuestion++;
-        if (currentQuestion < questions.length) {
+            currentQuestion++;
             displayQuestion();
         } else {
-            JOptionPane.showMessageDialog(this, "Quiz completed!\nYour score: " + score + "/" + questions.length);
-            // You can add more actions here, like restarting the quiz
+            JOptionPane.showMessageDialog(this, "Quiz has been completed. You cannot submit more answers.");
         }
     }
 
@@ -86,7 +100,9 @@ public class Quiz extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Quiz().setVisible(true);
+                Quiz quiz = new Quiz();
+                quiz.getContentPane().setBackground(Color.BLACK);
+                quiz.setVisible(true);
             }
         });
     }
